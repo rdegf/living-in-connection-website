@@ -36,10 +36,10 @@ if (!$ok) { header('Location: ' . $form . '?error=1'); exit; }
 
 $now = date('Y-m-d H:i');
 $early = time() < strtotime('2027-05-01 00:00:00');
-if ($business) { $price = $early ? 'EUR 595 excl. 21% VAT (business, early bird)' : 'EUR 695 excl. 21% VAT (business)'; }
-else           { $price = $early ? 'EUR 645 incl. 21% VAT (private, early bird)' : 'EUR 745 incl. 21% VAT (private)'; }
+if ($business) { $price = $early ? 'EUR 695 excl. 21% VAT (business, early bird)' : 'EUR 795 excl. 21% VAT (business)'; }
+else           { $price = $early ? 'EUR 595 excl. 21% VAT (private, early bird)' : 'EUR 695 excl. 21% VAT (private)'; }
 
-$summary = "INVOICE TYPE: " . ($business ? 'BUSINESS / SELF-EMPLOYED (plus 21% VAT)' : 'PRIVATE (incl. 21% VAT)') . "\n"
+$summary = "INVOICE TYPE: " . ($business ? 'BUSINESS / SELF-EMPLOYED (plus 21% VAT)' : 'PRIVATE (plus 21% VAT)') . "\n"
   . ($business ? "Company: {$f['company']}\nVAT number: " . ($f['vatnr'] !== '' ? $f['vatnr'] : '-') . "\n" : '')
   . "Price: $price\n\nName: {$f['fullname']}\nEmail: $email\nPhone: {$f['phone']}\nDate of birth: {$f['dob']}\n\n"
   . "Address:\n{$f['address']}\n\nInvoice address:\n{$f['invoice']}\n\n"
