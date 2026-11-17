@@ -1,6 +1,6 @@
 (function(){
-  // After the early-bird deadline (1 May 2027, 00:00 Amsterdam time) show the regular prices
-  if(Date.now()>=Date.parse('2027-05-01T00:00:00+02:00')){
+  // After the early-bird deadline (1 April 2027, 00:00 Amsterdam time) show the regular prices
+  if(Date.now()>=Date.parse('2027-04-01T00:00:00+02:00')){
     document.querySelectorAll('[data-late]').forEach(function(e){e.innerHTML=e.getAttribute('data-late')});
   }
   // Testimonial slider

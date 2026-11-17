@@ -35,7 +35,7 @@ if ($business && $f['company'] === '') { $ok = false; }
 if (!$ok) { header('Location: ' . $form . '?error=1'); exit; }
 
 $now = date('Y-m-d H:i');
-$early = time() < strtotime('2027-05-01 00:00:00');
+$early = time() < strtotime('2027-04-01 00:00:00');
 if ($business) { $price = $early ? 'EUR 695 excl. 21% VAT (business, early bird)' : 'EUR 795 excl. 21% VAT (business)'; }
 else           { $price = $early ? 'EUR 595 excl. 21% VAT (private, early bird)' : 'EUR 695 excl. 21% VAT (private)'; }
 
