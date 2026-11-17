@@ -6,7 +6,7 @@ date_default_timezone_set('Europe/Amsterdam');
 $form   = '/register/';
 $thanks = '/register/thanks/';
 $to     = 'info@livinginconnectionretreat.nl';           // shared mailbox, also the reply-to for participants
-$hosts  = [$to, 'caroline@leadershipimpulse.com'];     // everyone who gets the registration (add Rick's Gmail here)
+$hosts  = [$to, 'caroline@leadershipimpulse.com', 'rdegaayfortman@gmail.com']; // everyone who gets the registration
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . $form); exit; }
 if (trim((string)($_POST['website'] ?? '')) !== '') { header('Location: ' . $thanks); exit; } // honeypot: bots
 
