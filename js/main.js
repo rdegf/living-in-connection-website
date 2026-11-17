@@ -9,6 +9,16 @@
     dots.forEach(function(d){d.addEventListener('click',function(){show(+d.dataset.dot)})});
     show(0);
   }
+  // Card slider (who it is for)
+  var sl=document.getElementById('who-slider');
+  if(sl){
+    var tr=sl.querySelector('.track'),pb=sl.querySelector('[data-sprev]'),nb=sl.querySelector('[data-snext]');
+    function step(){var c=tr.querySelector('.card');return c.getBoundingClientRect().width+20}
+    function upd(){pb.disabled=tr.scrollLeft<4;nb.disabled=tr.scrollLeft+tr.clientWidth>=tr.scrollWidth-4}
+    pb.addEventListener('click',function(){tr.scrollBy({left:-step()})});
+    nb.addEventListener('click',function(){tr.scrollBy({left:step()})});
+    tr.addEventListener('scroll',upd,{passive:true});window.addEventListener('resize',upd);upd();
+  }
   // Gallery lightbox
   var lb=document.getElementById('lb');
   if(lb){
