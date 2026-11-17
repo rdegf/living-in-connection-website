@@ -24,28 +24,34 @@ $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 $f = [
   'fullname' => line('fullname'), 'phone' => line('phone'), 'dob' => line('dob', 20), 'emergency' => line('emergency'),
   'address' => para('address', 500), 'invoice' => para('invoice', 500),
+  'company' => line('company'), 'vatnr' => line('vatnr', 50),
   'diet' => para('diet'), 'medical' => para('medical'), 'hope' => para('hope'),
 ];
 $ok = (bool)$email && (($_POST['agree'] ?? '') === 'yes');
-foreach ($f as $v) { if ($v === '') { $ok = false; } }
+$business = (($_POST['booking_as'] ?? '') === 'business');
+if (!in_array($_POST['booking_as'] ?? '', ['private', 'business'], true)) { $ok = false; }
+foreach ($f as $k => $v) { if ($v === '' && !in_array($k, ['company', 'vatnr'], true)) { $ok = false; } }
+if ($business && $f['company'] === '') { $ok = false; }
 if (!$ok) { header('Location: ' . $form . '?error=1'); exit; }
 
 $now = date('Y-m-d H:i');
 $early = time() < strtotime('2027-05-01 00:00:00');
-$price = $early ? 'Early bird: EUR 645 incl. VAT (private) / EUR 595 excl. VAT (business)'
-                : 'EUR 745 incl. VAT (private) / EUR 695 excl. VAT (business)';
+if ($business) { $price = $early ? 'EUR 595 excl. 21% VAT (business, early bird)' : 'EUR 695 excl. 21% VAT (business)'; }
+else           { $price = $early ? 'EUR 645 incl. 21% VAT (private, early bird)' : 'EUR 745 incl. 21% VAT (private)'; }
 
-$summary = "Name: {$f['fullname']}\nEmail: $email\nPhone: {$f['phone']}\nDate of birth: {$f['dob']}\n\n"
+$summary = "INVOICE TYPE: " . ($business ? 'BUSINESS / SELF-EMPLOYED (plus 21% VAT)' : 'PRIVATE (incl. 21% VAT)') . "\n"
+  . ($business ? "Company: {$f['company']}\nVAT number: " . ($f['vatnr'] !== '' ? $f['vatnr'] : '-') . "\n" : '')
+  . "Price: $price\n\nName: {$f['fullname']}\nEmail: $email\nPhone: {$f['phone']}\nDate of birth: {$f['dob']}\n\n"
   . "Address:\n{$f['address']}\n\nInvoice address:\n{$f['invoice']}\n\n"
   . "Dietary allergies or wishes:\n{$f['diet']}\n\nMedical condition:\n{$f['medical']}\n\n"
   . "Emergency contact: {$f['emergency']}\n\nWhat they hope to get out of the retreat:\n{$f['hope']}\n\n"
-  . "Agreed with terms and conditions: yes\nPrice applicable at submission: $price\nSubmitted on: $now\n";
+  . "Agreed with terms and conditions: yes\nSubmitted on: $now\n";
 
 $from = "From: Living in Connection <website@livinginconnectionretreat.nl>\r\nContent-Type: text/plain; charset=UTF-8\r\n";
 $sub = function($s) { return '=?UTF-8?B?' . base64_encode($s) . '?='; };
 
 // To the hosts
-$toHosts = @mail(implode(', ', $hosts), $sub("New registration: {$f['fullname']} (21-23 May 2027)"),
+$toHosts = @mail(implode(', ', $hosts), $sub("New registration (" . ($business ? 'BUSINESS' : 'PRIVATE') . "): {$f['fullname']}"),
   "New registration via the website.\nConfirm the place within 3 working days, then send the invoice.\n\n" . $summary,
   $from . "Reply-To: $email\r\n");
 

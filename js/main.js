@@ -26,6 +26,9 @@
   var f=document.getElementById('reg');
   if(f){
     var warn=document.getElementById('warn');
+    var cf=document.getElementById('company-fields'),co=document.getElementById('company');
+    function syncAs(){var b=document.getElementById('as-business').checked;cf.hidden=!b;co.required=b}
+    f.querySelectorAll('input[name=booking_as]').forEach(function(r){r.addEventListener('change',syncAs)});syncAs();
     f.addEventListener('submit',function(e){
       if(!document.getElementById('agree-yes').checked){e.preventDefault();warn.hidden=false;warn.scrollIntoView({block:'center'})}
     });

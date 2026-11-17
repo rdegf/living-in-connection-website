@@ -150,3 +150,5 @@ textarea{min-height:110px;resize:vertical}
  .lb{padding:72px 12px}.terms section{flex-direction:column;padding:24px}
  summary{font-size:20px}
 }
+
+#company-fields:not([hidden]){display:flex}
