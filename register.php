@@ -5,7 +5,8 @@
 date_default_timezone_set('Europe/Amsterdam');
 $form   = '/register/';
 $thanks = '/register/thanks/';
-$to     = 'info@livinginconnectionretreat.nl';
+$to     = 'info@livinginconnectionretreat.nl';           // shared mailbox, also the reply-to for participants
+$hosts  = [$to, 'caroline@leadershipimpulse.com'];     // everyone who gets the registration (add Rick's Gmail here)
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . $form); exit; }
 if (trim((string)($_POST['website'] ?? '')) !== '') { header('Location: ' . $thanks); exit; } // honeypot: bots
 
@@ -44,15 +45,14 @@ $from = "From: Living in Connection <website@livinginconnectionretreat.nl>\r\nCo
 $sub = function($s) { return '=?UTF-8?B?' . base64_encode($s) . '?='; };
 
 // To the hosts
-$toHosts = @mail($to, $sub("New registration: {$f['fullname']} (21-23 May 2027)"),
+$toHosts = @mail(implode(', ', $hosts), $sub("New registration: {$f['fullname']} (21-23 May 2027)"),
   "New registration via the website.\nConfirm the place within 3 working days, then send the invoice.\n\n" . $summary,
   $from . "Reply-To: $email\r\n");
 
-// Copy to the participant
+// Confirmation to the participant: thank you and next steps only (no copy of their answers)
 $first = explode(' ', $f['fullname'])[0];
-$intro = "Dear $first,\n\nThank you for registering for the Living in Connection nature retreat, 21 to 23 May 2027 at Landgoed Welna in Epe. Below is a copy of what you submitted.\n\nWe will confirm your place within 3 working days. You then receive an invoice by email, payable within 14 days by bank transfer or iDEAL. Your place is guaranteed once payment has been received.\n\nTerms and conditions: https://livinginconnectionretreat.nl/terms-and-conditions/\n\n";
-$outro = "\nWarm regards,\nRick de Gaay Fortman and Caroline Hamrit\nLiving in Connection\n";
-@mail($email, $sub('Your registration: Living in Connection, 21-23 May 2027'), $intro . $summary . $outro,
+$msg = "Dear $first,\n\nThank you for registering for the Living in Connection nature retreat, 21 to 23 May 2027 at Landgoed Welna in Epe. We have received your registration.\n\nNext steps:\n1. Within 3 working days we confirm your place by email.\n2. You then receive an invoice, payable within 14 days by bank transfer or iDEAL. Your place is guaranteed once payment has been received.\n3. After that you receive the route, the packing list and a short welcome from us.\n\nTerms and conditions: https://livinginconnectionretreat.nl/terms-and-conditions/\n\nQuestions? Just reply to this email.\n\nWarm regards,\nRick de Gaay Fortman and Caroline Hamrit\nLiving in Connection\n";
+@mail($email, $sub('We received your registration: Living in Connection, 21-23 May 2027'), $msg,
   $from . "Reply-To: $to\r\n");
 
 header('Location: ' . ($toHosts ? $thanks : $form . '?error=1'));
