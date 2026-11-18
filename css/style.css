@@ -171,7 +171,7 @@ textarea{min-height:110px;resize:vertical}
 /* gallery: small square thumbnails on mobile, tap to enlarge */
 @media(max-width:700px){
  #gallery{padding:64px 0}
- .masonry{column-width:auto;columns:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+ .masonry{column-width:auto;columns:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
  .masonry div{margin:0}
  .masonry button{aspect-ratio:1/1;border-radius:10px}
  .masonry img{width:100%;height:100%;object-fit:cover}
