@@ -10,6 +10,11 @@ $hosts  = [$to, 'caroline@leadershipimpulse.com', 'rdegaayfortman@gmail.com']; /
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . $form); exit; }
 if (trim((string)($_POST['website'] ?? '')) !== '') { header('Location: ' . $thanks); exit; } // honeypot: bots
 
+// Anti-spam: real people need more than a few seconds for this form; bots submit instantly or without running the page's script.
+$elapsed = (int)($_POST['elapsed'] ?? 0);
+if ($elapsed < 6000) { header('Location: ' . $thanks); exit; }
+function has_link($v) { return (bool)preg_match('~https?://|www\.|\b[a-z0-9-]+\.(com|net|org|info|biz|xyz|top|ru|click|link|shop)/~i', $v); }
+
 function line($k, $max = 200) {
     $v = (string)($_POST[$k] ?? '');
     $v = trim(preg_replace('/[\r\n\t]+/', ' ', strip_tags($v)));
@@ -32,6 +37,7 @@ $business = (($_POST['booking_as'] ?? '') === 'business');
 if (!in_array($_POST['booking_as'] ?? '', ['private', 'business'], true)) { $ok = false; }
 foreach ($f as $k => $v) { if ($v === '' && !in_array($k, ['company', 'vatnr'], true)) { $ok = false; } }
 if ($business && $f['company'] === '') { $ok = false; }
+foreach ($f as $v) { if (has_link($v)) { $ok = false; } }
 if (!$ok) { header('Location: ' . $form . '?error=1'); exit; }
 
 $now = date('Y-m-d H:i');

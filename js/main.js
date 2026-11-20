@@ -43,7 +43,9 @@
     var cf=document.getElementById('company-fields'),co=document.getElementById('company');
     function syncAs(){var b=document.getElementById('as-business').checked;cf.hidden=!b;co.required=b}
     f.querySelectorAll('input[name=booking_as]').forEach(function(r){r.addEventListener('change',syncAs)});syncAs();
+    var t0=Date.now(),el=document.createElement('input');el.type='hidden';el.name='elapsed';f.appendChild(el);
     f.addEventListener('submit',function(e){
+      el.value=Date.now()-t0;
       if(!document.getElementById('agree-yes').checked){e.preventDefault();warn.hidden=false;warn.scrollIntoView({block:'center'})}
     });
     f.querySelectorAll('input[name=agree]').forEach(function(r){r.addEventListener('change',function(){if(document.getElementById('agree-yes').checked)warn.hidden=true})});
